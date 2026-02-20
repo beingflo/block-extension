@@ -28,7 +28,7 @@
     "gecko": {
       "id": "youtube-time-tracker@local",
       "data_collection_permissions": {
-        "required": []
+        "required": ["none"]
       }
     }
   },
