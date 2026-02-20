@@ -13,6 +13,7 @@ async function refreshDisplay() {
   const data = await browser.storage.local.get("counter");
   const counter = data.counter ?? 0;
   document.getElementById("time").textContent = formatTime(counter);
+  document.getElementById("add").disabled = counter > 0;
 }
 
 document.getElementById("add").addEventListener("click", async () => {

@@ -56,7 +56,6 @@
       await browser.storage.local.set({ counter: remaining });
       if (remaining <= 0) {
         stopInterval();
-        redirect();
       }
     }, 1000);
   }
@@ -74,7 +73,6 @@
     updateHud();
     if (remaining <= 0) {
       stopInterval();
-      redirect();
     }
   }
 
