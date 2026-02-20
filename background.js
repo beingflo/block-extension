@@ -15,7 +15,7 @@ async function ensureAlarm() {
   if (!existing) {
     browser.alarms.create(ALARM_NAME, {
       when: nextHourTimestamp(),
-      periodInMinutes: 1,
+      periodInMinutes: 60,
     });
   }
 }
