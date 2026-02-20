@@ -17,7 +17,6 @@
     "scripts": ["background.js"]
   },
   "permissions": ["storage", "alarms"],
-  "data_collection_permissions": [],
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
@@ -26,7 +25,10 @@
     }
   ],
   "browser_specific_settings": {
-    "gecko": { "id": "youtube-time-tracker@local" }
+    "gecko": {
+      "id": "youtube-time-tracker@local",
+      "data_collection_permissions": []
+    }
   },
   "web_accessible_resources": [
     {
