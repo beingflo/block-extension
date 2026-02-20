@@ -17,6 +17,7 @@
     "scripts": ["background.js"]
   },
   "permissions": ["storage", "alarms"],
+  "data_collection_permissions": [],
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
