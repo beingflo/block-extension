@@ -24,6 +24,9 @@
       "run_at": "document_start"
     }
   ],
+  "browser_specific_settings": {
+    "gecko": { "id": "youtube-time-tracker@local" }
+  },
   "web_accessible_resources": [
     {
       "resources": ["pages/blocked.html"],
