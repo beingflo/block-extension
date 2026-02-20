@@ -27,7 +27,9 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "youtube-time-tracker@local",
-      "data_collection_permissions": {}
+      "data_collection_permissions": {
+        "required": []
+      }
     }
   },
   "web_accessible_resources": [
