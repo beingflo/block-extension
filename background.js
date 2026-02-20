@@ -1,6 +1,7 @@
 const ALARM_NAME = "hourlyRefill";
 const REFILL_SECONDS = 150; // 2.5 minutes per hour
 const DEFAULT_SECONDS = 3600; // initial grant on first install
+const MAX_SECONDS = 36000; // 10 hour cap
 
 function nextHourTimestamp() {
   const now = new Date();
@@ -40,5 +41,5 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== ALARM_NAME) return;
   const data = await browser.storage.local.get("counter");
   const current = data.counter ?? 0;
-  await browser.storage.local.set({ counter: current + REFILL_SECONDS });
+  await browser.storage.local.set({ counter: Math.min(current + REFILL_SECONDS, MAX_SECONDS) });
 });
