@@ -1,6 +1,6 @@
 const ALARM_NAME = "hourlyRefill";
-const REFILL_SECONDS = 20; // 2.5 minutes per hour
-const DEFAULT_SECONDS = 20; // initial grant on first install
+const REFILL_SECONDS = 150; // 2.5 minutes per hour
+const DEFAULT_SECONDS = 3600; // initial grant on first install
 
 function nextHourTimestamp() {
   const now = new Date();

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Face -->
+  <circle cx="64" cy="64" r="60" fill="white" stroke="black" stroke-width="7"/>
+
+  <!-- Hour hand — 305° (10:10), with a short tail through the pivot -->
+  <!-- tip: (41, 48)  tail: (72, 70) -->
+  <line x1="72" y1="70" x2="41" y2="48"
+        stroke="black" stroke-width="10" stroke-linecap="square"/>
+
+  <!-- Minute hand — 60° (10 min), with a short tail -->
+  <!-- tip: (102, 42)  tail: (57, 68) -->
+  <line x1="57" y1="68" x2="102" y2="42"
+        stroke="black" stroke-width="5" stroke-linecap="square"/>
+</svg>

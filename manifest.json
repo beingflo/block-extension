@@ -3,9 +3,15 @@
   "name": "YouTube Time Tracker",
   "version": "1.0",
   "description": "Limits daily YouTube time with an hourly refill.",
+  "icons": {
+    "16": "icons/clock.svg",
+    "48": "icons/clock.svg",
+    "128": "icons/clock.svg"
+  },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "YouTube Time Tracker"
+    "default_title": "YouTube Time Tracker",
+    "default_icon": "icons/clock.svg"
   },
   "background": {
     "scripts": ["background.js"]
