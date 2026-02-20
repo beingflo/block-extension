@@ -1,17 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Block Extension",
+  "name": "YouTube Time Tracker",
   "version": "1.0",
-  "description": "Example Firefox extension",
+  "description": "Limits daily YouTube time with an hourly refill.",
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Block Extension"
+    "default_title": "YouTube Time Tracker"
   },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": ["storage", "alarms"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content_scripts/content.js"]
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content_scripts/youtube.js"],
+      "run_at": "document_start"
     }
   ],
-  "permissions": ["activeTab"]
+  "web_accessible_resources": [
+    {
+      "resources": ["pages/blocked.html"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ]
 }
