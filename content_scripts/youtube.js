@@ -125,5 +125,11 @@
     if (!document.hidden) startInterval();
   }
 
+  document.addEventListener("yt-navigate-finish", () => {
+    if (remaining <= 0) {
+      redirect();
+    }
+  });
+
   init();
 })();
