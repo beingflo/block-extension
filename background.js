@@ -8,16 +8,12 @@ function currentHourTimestamp() {
   return Math.floor(Date.now() / HOUR_MS) * HOUR_MS;
 }
 
-function nextHourTimestamp() {
-  return currentHourTimestamp() + HOUR_MS;
-}
-
 async function ensureAlarm() {
   const existing = await browser.alarms.get(ALARM_NAME);
   if (!existing) {
     browser.alarms.create(ALARM_NAME, {
-      when: nextHourTimestamp(),
-      periodInMinutes: 60,
+      delayInMinutes: 5,
+      periodInMinutes: 5,
     });
   }
 }
