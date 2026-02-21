@@ -3,6 +3,9 @@
   document.documentElement.style.visibility = "hidden";
 
   const BLOCKED_URL = browser.runtime.getURL("pages/blocked.html");
+  const REFILL_SECONDS = 150; // 2.5 minutes per hour
+  const MAX_SECONDS = 36000; // 10 hour cap
+  const HOUR_MS = 3600 * 1000;
 
   function redirect() {
     window.location.replace(BLOCKED_URL);
@@ -67,7 +70,20 @@
     }
   }
 
+  async function refillIfDue() {
+    const data = await browser.storage.local.get(["counter", "lastRefillTime"]);
+    const lastRefillTime = data.lastRefillTime ?? Date.now();
+    const hoursElapsed = Math.floor((Date.now() - lastRefillTime) / HOUR_MS);
+    if (hoursElapsed < 1) return;
+    const current = data.counter ?? 0;
+    await browser.storage.local.set({
+      counter: Math.min(current + hoursElapsed * REFILL_SECONDS, MAX_SECONDS),
+      lastRefillTime: Math.floor(Date.now() / HOUR_MS) * HOUR_MS,
+    });
+  }
+
   async function resyncFromStorage() {
+    await refillIfDue();
     const data = await browser.storage.local.get("counter");
     remaining = data.counter ?? 0;
     updateHud();
@@ -105,6 +121,7 @@
   });
 
   async function init() {
+    await refillIfDue();
     const data = await browser.storage.local.get("counter");
     remaining = data.counter ?? 0;
 
