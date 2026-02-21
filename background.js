@@ -9,13 +9,11 @@ function currentHourTimestamp() {
 }
 
 async function ensureAlarm() {
-  const existing = await browser.alarms.get(ALARM_NAME);
-  if (!existing) {
-    browser.alarms.create(ALARM_NAME, {
-      delayInMinutes: 5,
-      periodInMinutes: 5,
-    });
-  }
+  await browser.alarms.clear(ALARM_NAME);
+  browser.alarms.create(ALARM_NAME, {
+    delayInMinutes: 5,
+    periodInMinutes: 5,
+  });
 }
 
 async function ensureCounter() {
