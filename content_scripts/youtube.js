@@ -86,6 +86,13 @@
     }
   });
 
+  window.addEventListener("blur", () => stopInterval());
+  window.addEventListener("focus", () => {
+    resyncFromStorage().then(() => {
+      if (remaining > 0) startInterval();
+    });
+  });
+
   // Only update remaining from storage when the new value is higher
   // (popup additions or hourly refills), to avoid fighting tick writes.
   browser.storage.onChanged.addListener((changes, area) => {
