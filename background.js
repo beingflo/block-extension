@@ -2,13 +2,14 @@ const ALARM_NAME = "hourlyRefill";
 const REFILL_SECONDS = 150; // 2.5 minutes per hour
 const DEFAULT_SECONDS = 3600; // initial grant on first install
 const MAX_SECONDS = 36000; // 10 hour cap
+const HOUR_MS = 3600 * 1000;
+
+function currentHourTimestamp() {
+  return Math.floor(Date.now() / HOUR_MS) * HOUR_MS;
+}
 
 function nextHourTimestamp() {
-  const now = new Date();
-  const next = new Date(now);
-  next.setMinutes(0, 0, 0);
-  next.setHours(next.getHours() + 1);
-  return next.getTime();
+  return currentHourTimestamp() + HOUR_MS;
 }
 
 async function ensureAlarm() {
@@ -22,10 +23,29 @@ async function ensureAlarm() {
 }
 
 async function ensureCounter() {
-  const data = await browser.storage.local.get("counter");
+  const data = await browser.storage.local.get(["counter", "lastRefillTime"]);
+  const updates = {};
   if (data.counter === undefined) {
-    await browser.storage.local.set({ counter: DEFAULT_SECONDS });
+    updates.counter = DEFAULT_SECONDS;
   }
+  if (data.lastRefillTime === undefined) {
+    updates.lastRefillTime = currentHourTimestamp();
+  }
+  if (Object.keys(updates).length > 0) {
+    await browser.storage.local.set(updates);
+  }
+}
+
+async function refillIfDue() {
+  const data = await browser.storage.local.get(["counter", "lastRefillTime"]);
+  const lastRefillTime = data.lastRefillTime ?? currentHourTimestamp();
+  const hoursElapsed = Math.floor((Date.now() - lastRefillTime) / HOUR_MS);
+  if (hoursElapsed < 1) return;
+  const current = data.counter ?? 0;
+  await browser.storage.local.set({
+    counter: Math.min(current + hoursElapsed * REFILL_SECONDS, MAX_SECONDS),
+    lastRefillTime: currentHourTimestamp(),
+  });
 }
 
 browser.runtime.onInstalled.addListener(async () => {
@@ -34,12 +54,11 @@ browser.runtime.onInstalled.addListener(async () => {
 });
 
 browser.runtime.onStartup.addListener(async () => {
+  await refillIfDue();
   await ensureAlarm();
 });
 
 browser.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== ALARM_NAME) return;
-  const data = await browser.storage.local.get("counter");
-  const current = data.counter ?? 0;
-  await browser.storage.local.set({ counter: Math.min(current + REFILL_SECONDS, MAX_SECONDS) });
+  await refillIfDue();
 });
