@@ -27,6 +27,8 @@
   let hud = null;
 
   function createHud() {
+    const existing = document.getElementById("__yt_time_hud__");
+    if (existing) existing.remove();
     hud = document.createElement("div");
     hud.id = "__yt_time_hud__";
     Object.assign(hud.style, {
