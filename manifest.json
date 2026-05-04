@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouTube Time Tracker",
-  "version": "1.5",
+  "version": "1.6",
   "description": "Limits daily YouTube time with a daily refill.",
   "icons": {
     "16": "icons/clock.svg",
