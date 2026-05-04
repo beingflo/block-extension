@@ -3,9 +3,8 @@
   document.documentElement.style.visibility = "hidden";
 
   const BLOCKED_URL = browser.runtime.getURL("pages/blocked.html");
-  const REFILL_SECONDS = 150; // 2.5 minutes per hour
-  const MAX_SECONDS = 36000; // 10 hour cap
-  const HOUR_MS = 3600 * 1000;
+  const DAILY_REFILL_SECONDS = 2700; // 45 minutes per day
+  const MAX_SECONDS = 14400; // 4 hour cap
 
   function redirect() {
     window.location.replace(BLOCKED_URL);
@@ -72,15 +71,21 @@
     }
   }
 
+  function todayDateString() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
   async function refillIfDue() {
-    const data = await browser.storage.local.get(["counter", "lastRefillTime"]);
-    const lastRefillTime = data.lastRefillTime ?? Date.now();
-    const hoursElapsed = Math.floor((Date.now() - lastRefillTime) / HOUR_MS);
-    if (hoursElapsed < 1) return;
+    const data = await browser.storage.local.get(["counter", "lastRefillDate"]);
+    const today = todayDateString();
+    const lastDate = data.lastRefillDate ?? today;
+    const daysPassed = Math.max(0, Math.floor((new Date(today) - new Date(lastDate)) / (86400 * 1000)));
+    if (daysPassed < 1) return;
     const current = data.counter ?? 0;
     await browser.storage.local.set({
-      counter: Math.min(current + hoursElapsed * REFILL_SECONDS, MAX_SECONDS),
-      lastRefillTime: Math.floor(Date.now() / HOUR_MS) * HOUR_MS,
+      counter: Math.min(current + daysPassed * DAILY_REFILL_SECONDS, MAX_SECONDS),
+      lastRefillDate: today,
     });
   }
 
@@ -112,7 +117,7 @@
   });
 
   // Only update remaining from storage when the new value is higher
-  // (popup additions or hourly refills), to avoid fighting tick writes.
+  // (popup additions or daily refills), to avoid fighting tick writes.
   browser.storage.onChanged.addListener((changes, area) => {
     if (area !== "local" || !changes.counter) return;
     const newVal = changes.counter.newValue ?? 0;
